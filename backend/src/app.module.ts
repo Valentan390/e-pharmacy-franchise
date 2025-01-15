@@ -4,10 +4,27 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { LoggerMiddleware } from './common/logger/logger.middleware';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
+// import { Connection } from 'mongoose';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), AuthModule, UsersModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    MongooseModule.forRootAsync({
+      useFactory: (configService: ConfigService) => ({
+        uri: `mongodb+srv://${configService.get<string>('MONGODB_USER')}:${configService.get<string>('MONGODB_PASSWORD')}@${configService.get<string>('MONGODB_URL')}/${configService.get<string>('MONGODB_DB')}?retryWrites=true&w=majority&appName=Cluster0`,
+        // onConnectionCreate: (connection: Connection) => {
+        //   connection.on('connected', () =>
+        //     console.log('Mongodb connection successfully'),
+        //   );
+        // },
+      }),
+      inject: [ConfigService],
+    }),
+    AuthModule,
+    UsersModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
