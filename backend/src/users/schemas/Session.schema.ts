@@ -3,8 +3,10 @@ import mongoose, { HydratedDocument, ObjectId } from 'mongoose';
 
 export type SessionDocument = HydratedDocument<Session>;
 
-@Schema()
+@Schema({ versionKey: false, timestamps: true })
 export class Session {
+  _id?: ObjectId;
+
   @Prop({ type: mongoose.Schema.Types.ObjectId })
   userId: ObjectId;
 
