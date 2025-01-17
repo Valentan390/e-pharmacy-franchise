@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/User.shema';
 import { Session } from './schemas/Session.schema';
-import { Model, ObjectId } from 'mongoose';
+import { Model, ObjectId, RootFilterQuery, UpdateQuery } from 'mongoose';
 import { IPayload } from 'src/auth/auth.service';
 
 @Injectable()
@@ -33,5 +33,12 @@ export class UsersService {
     refreshToken: string;
   }): Promise<Session> {
     return await this.sessionModel.findOne(filter);
+  }
+
+  async updateUser(
+    filter: RootFilterQuery<User>,
+    update: UpdateQuery<User>,
+  ): Promise<void> {
+    await this.userModel.findOneAndUpdate(filter, update);
   }
 }

@@ -1,16 +1,20 @@
 import {
   Body,
   Controller,
+  Get,
   HttpStatus,
   Post,
+  Query,
   Req,
   Res,
   UnauthorizedException,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { authDto } from './dto/authDto';
 import { setupSession } from 'src/utils/setupSession';
 import { Request, Response } from 'express';
+import { VerifyTokenDto } from './dto/verifyToken.dto';
 
 @Controller('auth/user')
 export class AuthController {
@@ -24,6 +28,13 @@ export class AuthController {
       status: HttpStatus.CREATED,
       message: 'Successffuly register user!',
     };
+  }
+
+  @Get('verify')
+  async verify(@Query(new ValidationPipe()) query: VerifyTokenDto) {
+    await this.authService.verify(query.token);
+
+    return { status: HttpStatus.OK, message: 'User successfully verified' };
   }
 
   @Post('login')

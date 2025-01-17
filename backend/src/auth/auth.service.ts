@@ -1,12 +1,20 @@
 import {
   ConflictException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { createSession } from 'src/utils/createSession';
 import { ObjectId } from 'mongoose';
+import { JwtService } from '@nestjs/jwt';
+import { TEMPLATES_DIR } from 'src/constants';
+import * as path from 'node:path';
+import { readFile } from 'fs/promises';
+import * as Handlebars from 'handlebars';
+import { ConfigService } from '@nestjs/config';
+import { MailService } from 'src/mail/mail.service';
 
 export interface IPayload {
   email: string;
@@ -15,7 +23,12 @@ export interface IPayload {
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService,
+    private configService: ConfigService,
+    private mailService: MailService,
+  ) {}
 
   async registerUser(payload: IPayload) {
     const { email, password } = payload;
@@ -33,7 +46,53 @@ export class AuthService {
       password: hashPassword,
     });
 
+    const verifyEmailTemplatePath = path.join(
+      TEMPLATES_DIR,
+      'verify-email.html',
+    );
+
+    const templateSource = await readFile(verifyEmailTemplatePath, 'utf-8');
+
+    const template = Handlebars.compile(templateSource);
+
+    const appDomain = this.configService.get<string>('APP_DOMAIN');
+
+    const token = await this.jwtService.signAsync({ email });
+
+    const html = template({
+      //   username: newUser.username,
+      link: `${appDomain}/auth/user/verify?token=${token}`,
+    });
+
+    const verifyEmail = {
+      to: email,
+      subject: 'Підтверження email',
+      html,
+    };
+
+    await this.mailService.sendMail(verifyEmail);
+
     return newUser;
+  }
+
+  async verify(token: string) {
+    const { email } = await this.jwtService.verifyAsync(token);
+
+    if (!email) {
+      throw new UnauthorizedException('Invalid or expired token');
+    }
+
+    const user = await this.usersService.getUser({ email });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.verify) {
+      throw new NotFoundException('User already verified');
+    }
+
+    await this.usersService.updateUser({ _id: user._id }, { verify: true });
   }
 
   async loginUser(payload: IPayload) {

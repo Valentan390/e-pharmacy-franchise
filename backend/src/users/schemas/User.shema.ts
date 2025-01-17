@@ -21,7 +21,7 @@ export class User {
 
   @Prop({
     type: Boolean,
-    default: true,
+    default: false,
     required: true,
   })
   verify: boolean;
