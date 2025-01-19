@@ -65,7 +65,7 @@ export class AuthService {
     const token = await this.jwtService.signAsync({ email });
 
     const html = template({
-      //   username: newUser.username,
+      username: newUser.username,
       link: `${appDomain}/auth/user/verify?token=${token}`,
     });
 

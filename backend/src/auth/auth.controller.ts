@@ -106,9 +106,14 @@ export class AuthController {
     });
 
     return {
-      status: HttpStatus.OK,
-      message: 'User successfully found',
-      user: user,
+      //   status: HttpStatus.OK,
+      //   message: 'User successfully found',
+      user: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        verify: user.verify,
+      },
     };
   }
 }
