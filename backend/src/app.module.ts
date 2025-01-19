@@ -6,6 +6,7 @@ import { LoggerMiddleware } from './common/logger/logger.middleware';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 // import { Connection } from 'mongoose';
+import { ShopModule } from './shop/shop.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { MongooseModule } from '@nestjs/mongoose';
       inject: [ConfigService],
     }),
     AuthModule,
+    ShopModule,
   ],
   controllers: [AppController],
   providers: [AppService],
