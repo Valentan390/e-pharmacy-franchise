@@ -12,8 +12,11 @@ export class UsersService {
     @InjectModel(Session.name) private sessionModel: Model<Session>,
   ) {}
 
-  async getUser({ email }: { email: string }): Promise<User | null> {
-    return await this.userModel.findOne({ email });
+  async getUser(filter: {
+    email?: string;
+    _id?: ObjectId;
+  }): Promise<User | null> {
+    return await this.userModel.findOne(filter);
   }
 
   async createUser(payload: IPayload): Promise<User> {

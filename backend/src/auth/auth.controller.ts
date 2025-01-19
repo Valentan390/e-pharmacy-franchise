@@ -11,17 +11,21 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { authDto } from './dto/authDto';
+import { RegisterDto } from './dto/register.dto';
 import { setupSession } from 'src/utils/setupSession';
 import { Request, Response } from 'express';
 import { VerifyTokenDto } from './dto/verifyToken.dto';
+import { LoginDto } from './dto/login.dto';
+import { EmptyBodyPipe } from 'src/common/pipe/emptyBody.pipe';
 
 @Controller('auth/user')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('register')
-  async signup(@Body() body: authDto) {
+  async signup(
+    @Body(new EmptyBodyPipe(), new ValidationPipe()) body: RegisterDto,
+  ) {
     await this.authService.registerUser(body);
 
     return {
@@ -39,7 +43,7 @@ export class AuthController {
 
   @Post('login')
   async signin(
-    @Body() body: authDto,
+    @Body(new EmptyBodyPipe(), new ValidationPipe()) body: LoginDto,
     @Res({ passthrough: true }) res: Response,
   ) {
     const session = await this.authService.loginUser(body);
@@ -76,7 +80,8 @@ export class AuthController {
 
   @Post('refresh')
   async refreshSession(
-    @Req() req: Request,
+    @Req()
+    req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
     const session = await this.authService.refreshSession({
@@ -90,6 +95,20 @@ export class AuthController {
       status: HttpStatus.CREATED,
       message: 'Session successfully refresh',
       data: { accessToken: session.accessToken },
+    };
+  }
+
+  @Get('user-info')
+  async useкInformation(@Req() req: Request) {
+    const user = await this.authService.userInfo({
+      sessionId: req.cookies.sessionId,
+      refreshToken: req.cookies.refreshToken,
+    });
+
+    return {
+      status: HttpStatus.OK,
+      message: 'User successfully found',
+      user: user,
     };
   }
 }

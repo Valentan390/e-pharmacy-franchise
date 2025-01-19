@@ -8,6 +8,9 @@ export type UserDocument = HydratedDocument<User>;
 export class User {
   _id: ObjectId;
 
+  @Prop({ type: String, required: true })
+  username: string;
+
   @Prop({
     type: String,
     match: emailRegexp,

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -19,6 +20,10 @@ import { MailService } from 'src/mail/mail.service';
 export interface IPayload {
   email: string;
   password: string;
+}
+
+export interface IVerifyTokenPayload {
+  email: string;
 }
 
 @Injectable()
@@ -76,7 +81,8 @@ export class AuthService {
   }
 
   async verify(token: string) {
-    const { email } = await this.jwtService.verifyAsync(token);
+    const { email } =
+      await this.jwtService.verifyAsync<IVerifyTokenPayload>(token);
 
     if (!email) {
       throw new UnauthorizedException('Invalid or expired token');
@@ -89,7 +95,7 @@ export class AuthService {
     }
 
     if (user.verify) {
-      throw new NotFoundException('User already verified');
+      throw new BadRequestException('User already verified');
     }
 
     await this.usersService.updateUser({ _id: user._id }, { verify: true });
@@ -156,5 +162,34 @@ export class AuthService {
       userId: oldSession.userId,
       ...newSession,
     });
+  }
+
+  async userInfo({
+    sessionId,
+    refreshToken,
+  }: {
+    sessionId: ObjectId;
+    refreshToken: string;
+  }) {
+    const session = await this.usersService.getSession({
+      _id: sessionId,
+      refreshToken,
+    });
+
+    if (!session) {
+      throw new UnauthorizedException('Session not found');
+    }
+
+    if (Date.now() > session.refreshTokenValidUntil.getTime()) {
+      throw new UnauthorizedException('Refresh token expired');
+    }
+
+    const user = await this.usersService.getUser({ _id: session.userId });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    return user;
   }
 }
