@@ -24,7 +24,8 @@ export class AuthController {
 
   @Post('register')
   async signup(
-    @Body(new EmptyBodyPipe(), new ValidationPipe()) body: RegisterDto,
+    @Body(new EmptyBodyPipe(), new ValidationPipe({ whitelist: true }))
+    body: RegisterDto,
   ) {
     await this.authService.registerUser(body);
 
@@ -43,7 +44,8 @@ export class AuthController {
 
   @Post('login')
   async signin(
-    @Body(new EmptyBodyPipe(), new ValidationPipe()) body: LoginDto,
+    @Body(new EmptyBodyPipe(), new ValidationPipe({ whitelist: true }))
+    body: LoginDto,
     @Res({ passthrough: true }) res: Response,
   ) {
     const session = await this.authService.loginUser(body);
