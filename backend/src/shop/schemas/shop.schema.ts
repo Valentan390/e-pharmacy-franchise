@@ -7,7 +7,7 @@ export type ShopDocument = HydratedDocument<Shop>;
 
 @Schema({ versionKey: false, timestamps: true })
 export class Shop {
-  _id: ObjectId;
+  _id?: ObjectId;
 
   @Prop({ type: String, minlength: 2, maxlength: 50, required: true })
   shopName: string;

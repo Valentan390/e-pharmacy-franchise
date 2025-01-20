@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 // import { Connection } from 'mongoose';
 import { ShopModule } from './shop/shop.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ShopModule } from './shop/shop.module';
     }),
     AuthModule,
     ShopModule,
+    CloudinaryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

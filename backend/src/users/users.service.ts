@@ -32,8 +32,9 @@ export class UsersService {
   }
 
   async getSession(filter: {
-    _id: ObjectId;
-    refreshToken: string;
+    _id?: ObjectId;
+    refreshToken?: string;
+    accessToken?: string;
   }): Promise<Session> {
     return await this.sessionModel.findOne(filter);
   }

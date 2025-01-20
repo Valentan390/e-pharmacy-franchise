@@ -18,7 +18,7 @@ import { VerifyTokenDto } from './dto/verifyToken.dto';
 import { LoginDto } from './dto/login.dto';
 import { EmptyBodyPipe } from 'src/common/pipe/emptyBody.pipe';
 
-@Controller('auth/user')
+@Controller('api/user')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
