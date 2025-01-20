@@ -36,7 +36,7 @@ export class Shop {
   @Prop({ type: Boolean, default: false, required: true })
   ownDeliverySystem: boolean;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', unique: true })
   userId: ObjectId;
 }
 

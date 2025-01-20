@@ -3,8 +3,6 @@ import { diskStorage } from 'multer';
 import { TEMP_UPLOAD_DIR } from '../constants/index';
 import { Request } from 'express';
 
-console.log(TEMP_UPLOAD_DIR);
-
 export const multerConfig = {
   storage: diskStorage({
     destination: TEMP_UPLOAD_DIR,

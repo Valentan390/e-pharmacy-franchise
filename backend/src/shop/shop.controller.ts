@@ -2,8 +2,12 @@ import {
   Body,
   ConflictException,
   Controller,
+  Get,
   HttpStatus,
+  NotFoundException,
+  Param,
   Post,
+  Put,
   Req,
   UploadedFile,
   UseInterceptors,
@@ -14,6 +18,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateShopDto } from './dto/createShop.dto';
 import { User } from 'src/users/schemas/User.shema';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { ObjectId } from 'mongoose';
+import { ValidateObjectIdPipe } from 'src/common/pipe/validateObjectId.pipe';
+import { UpdateShopDto } from './dto/updateShop.dto';
+import { EmptyBodyPipe } from 'src/common/pipe/emptyBody.pipe';
 
 export interface IAuthRequest extends Request {
   user: User;
@@ -35,18 +43,15 @@ export class ShopController {
   @UseInterceptors(FileInterceptor('logo'))
   async addShop(
     @Req() req: IAuthRequest,
-    @Body(new ValidationPipe()) body: CreateShopDto,
+    @Body(new EmptyBodyPipe(), new ValidationPipe()) body: CreateShopDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
     const { _id: userId } = req.user;
-    const { email, phone } = body;
 
-    const shop = await this.shopService.getShop({ userId, email, phone });
+    const shop = await this.shopService.getShop({ userId });
 
     if (shop) {
-      throw new ConflictException(
-        `A store with a mail:${email} or phone:${phone} already exists.`,
-      );
+      throw new ConflictException(`User store created.`);
     }
 
     let logo = '';
@@ -74,5 +79,44 @@ export class ShopController {
       message: 'Shop create successfully.',
       newShop,
     };
+  }
+
+  @Get(':id')
+  async getShopById(
+    @Req() req: IAuthRequest,
+    @Param('id', new ValidateObjectIdPipe()) id: ObjectId,
+  ) {
+    const { _id: userId } = req.user;
+
+    const shop = await this.shopService.getShop({ _id: id, userId });
+
+    if (!shop) {
+      throw new NotFoundException(`Shop with id=${id} not found`);
+    }
+
+    return {
+      status: HttpStatus.OK,
+      message: `Shop with id=${id} fetched successfully`,
+      shop,
+    };
+  }
+
+  @Put(':id/update')
+  async updateShop(
+    @Req() req: IAuthRequest,
+    @Param('id', new ValidateObjectIdPipe()) id: ObjectId,
+    @Body(new EmptyBodyPipe(), new ValidationPipe()) body: UpdateShopDto,
+  ) {
+    const { _id: userId } = req.user;
+
+    const { data, isNew } = await this.shopService.updateShop(
+      { _id: id, userId },
+      { ...body, userId },
+      { upsert: true },
+    );
+
+    const status = isNew ? HttpStatus.CREATED : HttpStatus.OK;
+
+    return { status, message: 'Shop upserted successfully', data };
   }
 }
