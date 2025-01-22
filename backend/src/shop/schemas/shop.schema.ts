@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument, ObjectId } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 import { phoneRegexp, urlRegexp, zipCodeRegexp } from 'src/constants/shop';
 import { emailRegexp } from 'src/constants/users';
 
@@ -7,7 +7,7 @@ export type ShopDocument = HydratedDocument<Shop>;
 
 @Schema({ versionKey: false, timestamps: true })
 export class Shop {
-  _id?: ObjectId;
+  _id?: string;
 
   @Prop({ type: String, minlength: 2, maxlength: 50, required: true })
   shopName: string;
@@ -36,8 +36,8 @@ export class Shop {
   @Prop({ type: Boolean, default: false, required: true })
   ownDeliverySystem: boolean;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User', unique: true })
-  userId: ObjectId;
+  @Prop({ type: String, ref: 'User', unique: true })
+  userId: string;
 }
 
 export const ShopSchema = SchemaFactory.createForClass(Shop);

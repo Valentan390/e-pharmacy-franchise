@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/User.shema';
 import { Session } from './schemas/Session.schema';
-import { Model, ObjectId, RootFilterQuery, UpdateQuery } from 'mongoose';
+import { Model, RootFilterQuery, UpdateQuery } from 'mongoose';
 import { IPayload } from 'src/auth/auth.service';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class UsersService {
 
   async getUser(filter: {
     email?: string;
-    _id?: ObjectId;
+    _id?: string;
   }): Promise<User | null> {
     return await this.userModel.findOne(filter);
   }
@@ -23,7 +23,7 @@ export class UsersService {
     return await this.userModel.create(payload);
   }
 
-  async deleteSession(data: { userId?: ObjectId; _id?: ObjectId }) {
+  async deleteSession(data: { userId?: string; _id?: string }) {
     return await this.sessionModel.deleteOne(data);
   }
 
@@ -32,7 +32,7 @@ export class UsersService {
   }
 
   async getSession(filter: {
-    _id?: ObjectId;
+    _id?: string;
     refreshToken?: string;
     accessToken?: string;
   }): Promise<Session> {

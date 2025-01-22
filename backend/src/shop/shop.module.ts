@@ -9,6 +9,11 @@ import { UsersModule } from 'src/users/users.module';
 import { CloudinaryModule } from 'src/cloudinary/cloudinary.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { multerConfig } from 'src/utils/multer.config';
+import {
+  Product,
+  ProductDocument,
+  ProductSchema,
+} from './schemas/product.schema';
 
 @Module({
   imports: [
@@ -22,6 +27,21 @@ import { multerConfig } from 'src/utils/multer.config';
           ShopSchema.pre('findOneAndUpdate', setUpdateSettings<ShopDocument>);
           ShopSchema.post('findOneAndUpdate', handleSaveError<ShopDocument>);
           return ShopSchema;
+        },
+      },
+      {
+        name: Product.name,
+        useFactory: () => {
+          ProductSchema.post('save', handleSaveError<ProductDocument>);
+          ProductSchema.pre(
+            'findOneAndUpdate',
+            setUpdateSettings<ProductDocument>,
+          );
+          ProductSchema.post(
+            'findOneAndUpdate',
+            handleSaveError<ProductDocument>,
+          );
+          return ProductSchema;
         },
       },
     ]),

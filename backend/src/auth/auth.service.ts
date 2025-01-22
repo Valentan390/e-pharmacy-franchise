@@ -8,7 +8,6 @@ import {
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
 import { createSession } from 'src/utils/createSession';
-import { ObjectId } from 'mongoose';
 import { JwtService } from '@nestjs/jwt';
 import { TEMPLATES_DIR } from 'src/constants';
 import * as path from 'node:path';
@@ -66,7 +65,7 @@ export class AuthService {
 
     const html = template({
       username: newUser.username,
-      link: `${appDomain}/auth/user/verify?token=${token}`,
+      link: `${appDomain}/api/user/verify?token=${token}`,
     });
 
     const verifyEmail = {
@@ -130,7 +129,7 @@ export class AuthService {
     });
   }
 
-  async logoutUser(sessionId: ObjectId) {
+  async logoutUser(sessionId: string) {
     return await this.usersService.deleteSession({ _id: sessionId });
   }
 
@@ -138,7 +137,7 @@ export class AuthService {
     sessionId,
     refreshToken,
   }: {
-    sessionId: ObjectId;
+    sessionId: string;
     refreshToken: string;
   }) {
     const oldSession = await this.usersService.getSession({
@@ -168,7 +167,7 @@ export class AuthService {
     sessionId,
     refreshToken,
   }: {
-    sessionId: ObjectId;
+    sessionId: string;
     refreshToken: string;
   }) {
     const session = await this.usersService.getSession({

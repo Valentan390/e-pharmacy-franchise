@@ -1,14 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument, ObjectId } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 
 export type SessionDocument = HydratedDocument<Session>;
 
 @Schema({ versionKey: false, timestamps: true })
 export class Session {
-  _id?: ObjectId;
+  _id?: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId })
-  userId: ObjectId;
+  @Prop({ type: String })
+  userId: string;
 
   @Prop({
     type: String,

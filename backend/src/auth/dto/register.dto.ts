@@ -6,6 +6,7 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
+import { phoneRegexp } from 'src/constants/shop';
 import { emailRegexp } from 'src/constants/users';
 
 export class RegisterDto {
@@ -22,6 +23,12 @@ export class RegisterDto {
     message: 'Email does not match the required pattern',
   })
   email: string;
+
+  @IsNotEmpty({ message: 'Phone is required.' })
+  @Matches(phoneRegexp, {
+    message: 'Phone must match the required format (e.g., 097-333-88-87).',
+  })
+  phone: string;
 
   @IsNotEmpty({ message: 'Password is required' })
   @IsString({ message: 'Password must be a string' })

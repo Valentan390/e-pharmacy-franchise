@@ -1,14 +1,18 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument, ObjectId } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
+import { phoneRegexp } from 'src/constants/shop';
 import { emailRegexp } from 'src/constants/users';
 
 export type UserDocument = HydratedDocument<User>;
 
 @Schema({ versionKey: false, timestamps: true })
 export class User {
-  _id: ObjectId;
+  _id: string;
 
-  @Prop({ type: String, required: true })
+  @Prop({
+    type: String,
+    required: true,
+  })
   username: string;
 
   @Prop({
@@ -19,7 +23,17 @@ export class User {
   })
   email: string;
 
-  @Prop({ type: String, required: true })
+  @Prop({
+    type: String,
+    match: phoneRegexp,
+    required: true,
+  })
+  phone: string;
+
+  @Prop({
+    type: String,
+    required: true,
+  })
   password: string;
 
   @Prop({
