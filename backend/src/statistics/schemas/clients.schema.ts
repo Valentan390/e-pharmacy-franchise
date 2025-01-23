@@ -38,6 +38,12 @@ export class Client {
 
   @Prop({ type: Date, required: true })
   register_date: Date;
+
+  @Prop({ type: String, required: true, unique: true })
+  userId: string;
+
+  @Prop({ type: String, required: true, unique: true })
+  shopId: string;
 }
 
 export const ClientSchema = SchemaFactory.createForClass(Client);

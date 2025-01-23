@@ -26,6 +26,12 @@ export class IncomeExpense {
     required: true,
   })
   type: 'Expense' | 'Income';
+
+  @Prop({ type: String, required: true, unique: true })
+  userId: string;
+
+  @Prop({ type: String, required: true, unique: true })
+  shopId: string;
 }
 
 export const IncomeExpenseSchema = SchemaFactory.createForClass(IncomeExpense);
