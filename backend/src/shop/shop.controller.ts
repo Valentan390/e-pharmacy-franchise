@@ -24,6 +24,7 @@ import { EmptyBodyPipe } from 'src/common/pipe/emptyBody.pipe';
 import { AddProductDto } from './dto/addProduct.dto';
 import { UpdateProductDto } from './dto/updateProduct.dto';
 import { ParamsDto } from './dto/params.dto';
+import { ConfigService } from '@nestjs/config';
 
 export interface IAuthRequest extends Request {
   user: User;
@@ -36,9 +37,16 @@ export class ShopController {
   constructor(
     private shopService: ShopService,
     private cloudinaryService: CloudinaryService,
+    private readonly configService: ConfigService,
   ) {
-    this.enableCloudinary = process.env.ENABLE_CLOUDINARY === 'true';
-    this.baseUrl = process.env.BASE_URL;
+    this.enableCloudinary = this.configService.get<boolean>(
+      'ENABLE_CLOUDINARY',
+      false,
+    );
+    this.baseUrl = this.configService.get<string>(
+      'BASE_URL',
+      'http://localhost:3000',
+    );
   }
 
   @Post('create')

@@ -8,6 +8,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 // import { Connection } from 'mongoose';
 import { ShopModule } from './shop/shop.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { StatisticsModule } from './statistics/statistics.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
     AuthModule,
     ShopModule,
     CloudinaryModule,
+    StatisticsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

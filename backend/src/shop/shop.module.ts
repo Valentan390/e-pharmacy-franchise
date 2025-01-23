@@ -14,6 +14,7 @@ import {
   ProductDocument,
   ProductSchema,
 } from './schemas/product.schema';
+import { StatisticsController } from 'src/statistics/statistics.controller';
 
 @Module({
   imports: [
@@ -52,6 +53,8 @@ import {
 })
 export class ShopModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes('api/shop');
+    consumer
+      .apply(AuthMiddleware)
+      .forRoutes(ShopController, StatisticsController);
   }
 }
