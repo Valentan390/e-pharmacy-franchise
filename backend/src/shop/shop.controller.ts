@@ -25,11 +25,13 @@ import { AddProductDto } from './dto/addProduct.dto';
 import { UpdateProductDto } from './dto/updateProduct.dto';
 import { ParamsDto } from './dto/params.dto';
 import { ConfigService } from '@nestjs/config';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 export interface IAuthRequest extends Request {
   user: User;
 }
 
+@ApiBearerAuth()
 @Controller('api/shop')
 export class ShopController {
   private readonly enableCloudinary: boolean;
