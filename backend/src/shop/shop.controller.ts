@@ -25,13 +25,33 @@ import { AddProductDto } from './dto/addProduct.dto';
 import { UpdateProductDto } from './dto/updateProduct.dto';
 import { ParamsDto } from './dto/params.dto';
 import { ConfigService } from '@nestjs/config';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiBody,
+  ApiConflictResponse,
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiExtraModels,
+  ApiHeader,
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiUnauthorizedResponse,
+  getSchemaPath,
+} from '@nestjs/swagger';
+import { Shop } from './schemas/shop.schema';
+import { Product } from './schemas/product.schema';
 
 export interface IAuthRequest extends Request {
   user: User;
 }
 
 @ApiBearerAuth()
+@ApiExtraModels(Shop)
+@ApiExtraModels(Product)
 @Controller('api/shop')
 export class ShopController {
   private readonly enableCloudinary: boolean;
@@ -52,6 +72,33 @@ export class ShopController {
   }
 
   @Post('create')
+  @ApiOperation({ summary: 'Creates a user store.' })
+  @ApiConsumes('multipart/form-data')
+  @ApiHeader({
+    name: 'Authorization',
+    description: 'Bearer token for user authentication.',
+    required: true,
+  })
+  @ApiCreatedResponse({
+    description: 'Shop created successfully.',
+    schema: {
+      allOf: [
+        {
+          properties: {
+            status: { type: 'number', example: HttpStatus.CREATED },
+            message: { type: 'string', example: 'Shop created successfully.' },
+            newShop: { $ref: getSchemaPath(Shop) },
+          },
+        },
+      ],
+    },
+  })
+  @ApiConflictResponse({
+    description: 'Conflict. User store already created.',
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid request body or validation error.',
+  })
   @UseInterceptors(FileInterceptor('logo'))
   async addShop(
     @Req() req: IAuthRequest,
@@ -94,6 +141,33 @@ export class ShopController {
   }
 
   @Get(':shopId')
+  @ApiOperation({ summary: 'Loads detailed information about the store.' })
+  @ApiParam({
+    name: 'id',
+    description: 'The ID of the store to fetch.',
+    required: true,
+    type: String,
+  })
+  @ApiOkResponse({
+    description: 'Store fetched successfully.',
+    schema: {
+      allOf: [
+        {
+          properties: {
+            status: { type: 'number', example: HttpStatus.OK },
+            message: { type: 'string', example: 'Shop fetched successfully' },
+            shop: { $ref: getSchemaPath(Shop) },
+          },
+        },
+      ],
+    },
+  })
+  @ApiNotFoundResponse({
+    description: 'Store not found.',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'User is not authorized.',
+  })
   async getShopUser(
     @Req() req: IAuthRequest,
     @Param(new ValidationPipe()) params: ParamsDto,
@@ -115,6 +189,50 @@ export class ShopController {
   }
 
   @Put(':shopId/update')
+  @ApiOperation({ summary: 'Updates store data.' })
+  @ApiParam({
+    name: 'shopId',
+    description: 'The ID of the store to update.',
+    required: true,
+    type: String,
+  })
+  @ApiOkResponse({
+    description: 'Store updated successfully.',
+    schema: {
+      allOf: [
+        {
+          properties: {
+            status: { type: 'number', example: HttpStatus.OK },
+            message: { type: 'string', example: 'Shop updated successfully' },
+            shop: { $ref: getSchemaPath(Shop) },
+          },
+        },
+      ],
+    },
+  })
+  @ApiCreatedResponse({
+    description: 'Store created successfully (upserted).',
+    schema: {
+      allOf: [
+        {
+          properties: {
+            status: { type: 'number', example: HttpStatus.CREATED },
+            message: { type: 'string', example: 'Shop created successfully' },
+            shop: { $ref: getSchemaPath(Shop) },
+          },
+        },
+      ],
+    },
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid request parameters or body.',
+  })
+  @ApiNotFoundResponse({
+    description: 'Store not found.',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized access.',
+  })
   async updateShop(
     @Req() req: IAuthRequest,
     @Param(new ValidationPipe()) params: ParamsDto,
@@ -123,7 +241,7 @@ export class ShopController {
     const { _id: userId } = req.user;
     const { shopId } = params;
 
-    const { data, isNew } = await this.shopService.updateShop(
+    const { shop, isNew } = await this.shopService.updateShop(
       { _id: shopId, userId },
       { ...body, userId },
       { upsert: true },
@@ -131,10 +249,43 @@ export class ShopController {
 
     const status = isNew ? HttpStatus.CREATED : HttpStatus.OK;
 
-    return { status, message: 'Shop upserted successfully', data };
+    return { status, message: 'Shop upserted successfully', shop };
   }
 
   @Get(':shopId/product')
+  @ApiOperation({ summary: 'Getting a list of store products.' })
+  @ApiParam({
+    name: 'shopId',
+    description: 'The ID of the store.',
+    required: true,
+    type: String,
+  })
+  @ApiOkResponse({
+    description: 'List of products retrieved successfully.',
+    schema: {
+      allOf: [
+        {
+          properties: {
+            status: { type: 'number', example: HttpStatus.OK },
+            message: { type: 'string', example: '' },
+            products: {
+              type: 'array',
+              items: { $ref: getSchemaPath(Product) },
+            },
+          },
+        },
+      ],
+    },
+  })
+  @ApiNotFoundResponse({
+    description: 'Store or products not found.',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized access.',
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid shopId or request parameters.',
+  })
   async getProductsShop(
     @Req() req: IAuthRequest,
     @Param(new ValidationPipe()) params: ParamsDto,
@@ -156,6 +307,40 @@ export class ShopController {
   }
 
   @Post(':shopId/product/add')
+  @ApiOperation({ summary: 'Adds a new product to the user store.' })
+  @ApiConsumes('multipart/form-data')
+  @ApiParam({
+    name: 'shopId',
+    description: 'The ID of the store.',
+    required: true,
+    type: String,
+  })
+  @ApiCreatedResponse({
+    description: 'Product successfully created.',
+    schema: {
+      allOf: [
+        {
+          properties: {
+            status: { type: 'number', example: HttpStatus.CREATED },
+            message: {
+              type: 'string',
+              example: 'Product create successfully.',
+            },
+            newProduct: { $ref: getSchemaPath(Product) },
+          },
+        },
+      ],
+    },
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid request data or file upload issue.',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized access.',
+  })
+  @ApiNotFoundResponse({
+    description: 'Store not found.',
+  })
   @UseInterceptors(FileInterceptor('photo'))
   async addProductShop(
     @Req() req: IAuthRequest,
@@ -195,6 +380,44 @@ export class ShopController {
   }
 
   @Get(':shopId/product/:productId')
+  @ApiOperation({
+    summary: 'Get information about a specific product from the user store.',
+  })
+  @ApiParam({
+    name: 'shopId',
+    description: 'The ID of the store.',
+    required: true,
+    type: String,
+  })
+  @ApiParam({
+    name: 'productId',
+    description: 'The ID of the product to fetch.',
+    required: true,
+    type: String,
+  })
+  @ApiOkResponse({
+    description: 'Product found successfully.',
+    schema: {
+      allOf: [
+        {
+          properties: {
+            status: { type: 'number', example: HttpStatus.OK },
+            message: { type: 'string', example: 'Product found successfully.' },
+            product: { $ref: getSchemaPath(Product) },
+          },
+        },
+      ],
+    },
+  })
+  @ApiNotFoundResponse({
+    description: 'Product or store not found.',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized access.',
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid request parameters.',
+  })
   async getProductById(
     @Req() req: IAuthRequest,
     @Param(new ValidationPipe()) params: ParamsDto,
@@ -222,6 +445,63 @@ export class ShopController {
   }
 
   @Put(':shopId/product/:productId/edit')
+  @ApiOperation({ summary: 'Updates data for an existing product.' })
+  @ApiConsumes('multipart/form-data')
+  @ApiParam({
+    name: 'shopId',
+    description: 'The ID of the store.',
+    required: true,
+    type: String,
+  })
+  @ApiParam({
+    name: 'productId',
+    description: 'The ID of the product to fetch.',
+    required: true,
+    type: String,
+  })
+  @ApiOkResponse({
+    description: 'Product updated successfully.',
+    schema: {
+      allOf: [
+        {
+          properties: {
+            status: { type: 'number', example: HttpStatus.OK },
+            message: {
+              type: 'string',
+              example: 'Product updated successfully.',
+            },
+            product: { $ref: getSchemaPath(Product) },
+          },
+        },
+      ],
+    },
+  })
+  @ApiCreatedResponse({
+    description: 'New product created due to upsert operation.',
+    schema: {
+      allOf: [
+        {
+          properties: {
+            status: { type: 'number', example: HttpStatus.CREATED },
+            message: {
+              type: 'string',
+              example: 'Product updated successfully.',
+            },
+            product: { $ref: getSchemaPath(Product) },
+          },
+        },
+      ],
+    },
+  })
+  @ApiNotFoundResponse({
+    description: 'Product or store not found.',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized access.',
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid request parameters or file upload issue.',
+  })
   @UseInterceptors(FileInterceptor('photo'))
   async updateProductById(
     @Req() req: IAuthRequest,
@@ -266,6 +546,44 @@ export class ShopController {
   }
 
   @Delete(':shopId/product/:productId/delete')
+  @ApiOperation({ summary: 'Removes a product from the store.' })
+  @ApiParam({
+    name: 'shopId',
+    description: 'The ID of the store.',
+    required: true,
+    type: String,
+  })
+  @ApiParam({
+    name: 'productId',
+    description: 'The ID of the product to fetch.',
+    required: true,
+    type: String,
+  })
+  @ApiNoContentResponse({
+    description: 'Product deleted successfully.',
+    schema: {
+      allOf: [
+        {
+          properties: {
+            status: { type: 'number', example: HttpStatus.NO_CONTENT },
+            message: {
+              type: 'string',
+              example: 'Product with id=12345 deleted successfully',
+            },
+          },
+        },
+      ],
+    },
+  })
+  @ApiNotFoundResponse({
+    description: 'Product or store not found.',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized access.',
+  })
+  @ApiBadRequestResponse({
+    description: 'Invalid request parameters.',
+  })
   async deleteProductById(
     @Req() req: IAuthRequest,
     @Param(new ValidationPipe()) params: ParamsDto,

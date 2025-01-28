@@ -26,7 +26,7 @@ export class ShopService {
     filter: FilterQuery<Shop>,
     payload: UpdateQuery<Shop>,
     options = {},
-  ): Promise<{ data: Shop; isNew: boolean } | null> {
+  ): Promise<{ shop: Shop; isNew: boolean } | null> {
     const result = await this.shopModel.findOneAndUpdate(filter, payload, {
       includeResultMetadata: true,
       ...options,
@@ -37,7 +37,7 @@ export class ShopService {
     }
 
     return {
-      data: result.value,
+      shop: result.value,
       isNew: Boolean(result.lastErrorObject.upserted),
     };
   }
