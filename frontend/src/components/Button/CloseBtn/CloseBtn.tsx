@@ -1,14 +1,12 @@
 import { FC } from "react";
 import { CloseBtn_Button, CloseBtn_Icon } from "./CloseBtn.styled";
+import { useMobileMenu } from "../../../hooks/useMobileMenu";
 
-interface ICloseBtnProps {
-  onClick: () => void;
-}
-
-const CloseBtn: FC<ICloseBtnProps> = ({ onClick }) => {
+const CloseBtn: FC = () => {
+  const { closeMobileMenu } = useMobileMenu();
   return (
     <CloseBtn_Button
-      onClick={onClick}
+      onClick={closeMobileMenu}
       type="button"
       children={<CloseBtn_Icon iconName="icon-x" width={32} height={32} />}
     />
