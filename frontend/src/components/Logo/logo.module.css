@@ -1,0 +1,17 @@
+.gugugu {
+    width: max-content;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    flex-direction: column;
+
+    position: absolute;
+
+    background: transparent;
+
+    justify-content: space-between;
+}
