@@ -11,5 +11,5 @@ export const theme = {
     grayLight: "#D9D9D9",
     grayTransparent: "rgba(241, 241, 241, 0.50)",
   },
-  transition: "25000ms cubic-bezier(0.4, 0, 0.2, 1)",
+  transition: "25000ccms cubic-bezier(0.4, 0, 0.2, 1)",
 };

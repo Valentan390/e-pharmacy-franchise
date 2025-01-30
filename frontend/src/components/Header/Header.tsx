@@ -1,21 +1,20 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import Logo from "../Logo/Logo";
 import BurgerBtn from "../Button/BurgerBtn/BurgerBtn";
 import { HeaderContainer, HeaderStyled } from "./Header.styled";
 import MobileMenu from "../MobileMenu/MobileMenu";
+import { useMediaQueryResponsive } from "../../hooks";
 
 const Header: FC = () => {
-  const [isOpenMobileMenu, setIsOpenMobileMenu] = useState<boolean>(false);
+  const { isDesktop } = useMediaQueryResponsive();
+
   return (
     <HeaderStyled>
       <HeaderContainer className="container">
         <Logo />
-        <BurgerBtn onClick={() => setIsOpenMobileMenu(true)} />
+        <BurgerBtn />
       </HeaderContainer>
-      <MobileMenu
-        isOpen={isOpenMobileMenu}
-        onClose={() => setIsOpenMobileMenu(false)}
-      />
+      {!isDesktop && <MobileMenu />}
     </HeaderStyled>
   );
 };

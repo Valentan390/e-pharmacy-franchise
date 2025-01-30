@@ -3,24 +3,21 @@ import CloseBtn from "../Button/CloseBtn/CloseBtn";
 import NavBar from "../NavBar/NavBar";
 import LogOutBtn from "../Button/LogOutBtn/LogOutBtn";
 import { MobileMenu_Backdrop, MobileMenu_Wrapper } from "./MobileMenu.styled";
+import { useMobileMenu } from "../../hooks/useMobileMenu";
 
-export interface IMobileMenuProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-const MobileMenu: FC<IMobileMenuProps> = ({ isOpen, onClose }) => {
+const MobileMenu: FC = () => {
+  const { isMobileMenu, closeMobileMenu } = useMobileMenu();
   const handlerBackdropClick: MouseEventHandler<HTMLDivElement> = useCallback(
     (event) => {
       if (event.target === event.currentTarget) {
-        onClose();
+        closeMobileMenu();
       }
     },
-    [onClose]
+    [closeMobileMenu]
   );
 
   useEffect(() => {
-    if (isOpen) {
+    if (isMobileMenu) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
@@ -29,13 +26,16 @@ const MobileMenu: FC<IMobileMenuProps> = ({ isOpen, onClose }) => {
     return () => {
       document.body.style.overflow = "auto";
     };
-  }, [isOpen]);
+  }, [isMobileMenu]);
 
   return (
     <>
-      <MobileMenu_Backdrop $isOpen={isOpen} onClick={handlerBackdropClick} />
-      <MobileMenu_Wrapper $isOpen={isOpen}>
-        <CloseBtn onClick={onClose} />
+      <MobileMenu_Backdrop
+        $isOpen={isMobileMenu}
+        onClick={handlerBackdropClick}
+      />
+      <MobileMenu_Wrapper $isOpen={isMobileMenu}>
+        <CloseBtn />
         <NavBar />
         <LogOutBtn />
       </MobileMenu_Wrapper>
