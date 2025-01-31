@@ -3,7 +3,7 @@ import CloseBtn from "../Button/CloseBtn/CloseBtn";
 import NavBar from "../NavBar/NavBar";
 import LogOutBtn from "../Button/LogOutBtn/LogOutBtn";
 import { MobileMenu_Backdrop, MobileMenu_Wrapper } from "./MobileMenu.styled";
-import { useMobileMenu } from "../../hooks/useMobileMenu";
+import { useMobileMenu } from "../../hooks";
 
 const MobileMenu: FC = () => {
   const { isMobileMenu, closeMobileMenu } = useMobileMenu();

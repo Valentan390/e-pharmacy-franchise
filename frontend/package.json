@@ -12,6 +12,7 @@
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
     "@reduxjs/toolkit": "^2.5.1",
+    "axios": "^1.7.9",
     "modern-normalize": "^3.0.1",
     "moment": "^2.30.1",
     "nanoid": "^5.0.9",
