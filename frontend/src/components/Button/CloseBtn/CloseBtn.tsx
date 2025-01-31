@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { CloseBtn_Button, CloseBtn_Icon } from "./CloseBtn.styled";
-import { useMobileMenu } from "../../../hooks/useMobileMenu";
+import { useMobileMenu } from "../../../hooks";
 
 const CloseBtn: FC = () => {
   const { closeMobileMenu } = useMobileMenu();

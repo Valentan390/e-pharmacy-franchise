@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Burger_Icon, BurgerBtn_Button } from "./BurgerBtn.styled";
-import { useMobileMenu } from "../../../hooks/useMobileMenu";
+import { useMobileMenu } from "../../../hooks";
 
 const BurgerBtn: FC = () => {
   const { openMobileMenu } = useMobileMenu();
