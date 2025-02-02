@@ -4,22 +4,64 @@ import {
   AuthLogoutResponse,
   AuthSigninResponse,
   AuthSignupResponse,
+  RefreshRequest,
   SigninRequestBody,
   SignupRequestBody,
 } from "../types";
+import { updateToken } from "../redux/authUser/authUserSlice";
 
 const baseURLApi = import.meta.env.VITE_BASE_URL_API;
 
-const authInstance = axios.create({
+const instance = axios.create({
   baseURL: `${baseURLApi}`,
+  withCredentials: true,
 });
 
+// const setToken = (token: string | null) => {
+//   instance.defaults.headers.authorization = token ? `Bearer ${token}` : "";
+// };
+
 const setToken = (token: string | null) => {
-  authInstance.defaults.headers.authorization = token ? `Bearer ${token}` : "";
+  if (token) {
+    return (instance.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${token}`);
+  }
+  instance.defaults.headers.common["Authorization"] = "";
 };
 
+instance.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    const { store } = await import("../redux/store");
+
+    if (
+      error.response?.status === 401 &&
+      originalRequest.url !== "user/refresh"
+    ) {
+      try {
+        const { data } = await instance.post<RefreshRequest>("user/refresh");
+
+        const token = data.data.accessToken;
+
+        store.dispatch(updateToken(token));
+
+        setToken(token);
+
+        originalRequest.headers["Authorization"] = `Bearer ${token}`;
+
+        return instance(originalRequest);
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const signupRequest = async (body: SignupRequestBody) => {
-  const { data } = await authInstance.post<AuthSignupResponse>(
+  const { data } = await instance.post<AuthSignupResponse>(
     "/user/register",
     body
   );
@@ -28,16 +70,13 @@ export const signupRequest = async (body: SignupRequestBody) => {
 };
 
 export const signinRequest = async (body: SigninRequestBody) => {
-  const { data } = await authInstance.post<AuthSigninResponse>(
-    "/user/login",
-    body
-  );
+  const { data } = await instance.post<AuthSigninResponse>("/user/login", body);
   setToken(data.data.accessToken);
   return data;
 };
 
 export const logoutRequest = async () => {
-  const { data } = await authInstance.post<AuthLogoutResponse>("/user/logout");
+  const { data } = await instance.post<AuthLogoutResponse>("/user/logout");
   setToken(null);
   return data;
 };
@@ -45,12 +84,12 @@ export const logoutRequest = async () => {
 export const currentRequest = async (token: string) => {
   setToken(token);
   try {
-    const { data } = await authInstance.get<AuthCurrentResponse>(
-      "/user/user-info"
-    );
+    const { data } = await instance.get<AuthCurrentResponse>("/user/user-info");
     return data;
   } catch (error) {
     setToken(null);
     throw error;
   }
 };
+
+export default instance;

@@ -179,7 +179,7 @@ export class AuthService {
       throw new UnauthorizedException('Session not found');
     }
 
-    if (Date.now() > session.refreshTokenValidUntil.getTime()) {
+    if (Date.now() > session.accessTokenValidUntil.getTime()) {
       throw new UnauthorizedException('Refresh token expired');
     }
 

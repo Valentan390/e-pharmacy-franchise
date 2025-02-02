@@ -26,6 +26,14 @@ export interface SigninRequestBody {
   password: string;
 }
 
+export interface RefreshRequest {
+  status: number;
+  message: string;
+  data: {
+    accessToken: string;
+  };
+}
+
 export interface AuthSignupResponse {
   status: number;
   message: string;

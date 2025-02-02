@@ -24,7 +24,11 @@ const initialState: AuthUserState = {
 export const authUserSlice = createSlice({
   name: "authUser",
   initialState,
-  reducers: {},
+  reducers: {
+    updateToken: (state, action: PayloadAction<string>) => {
+      state.token = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(signupThunk.pending, handlerPending)
@@ -63,10 +67,12 @@ export const authUserSlice = createSlice({
           state.isLoading = false;
           state.error = null;
           state.user = action.payload.user;
+          state.isLogin = true;
         }
       )
       .addCase(currentThunk.rejected, handlerRejected);
   },
 });
 
+export const { updateToken } = authUserSlice.actions;
 export const authUserReducer = authUserSlice.reducer;

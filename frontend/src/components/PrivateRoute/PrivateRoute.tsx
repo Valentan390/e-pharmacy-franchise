@@ -1,9 +1,9 @@
 import { FC } from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import useCurrentUser from "../../hooks/useCurrentUser";
 
 const PrivateRoute: FC = () => {
-  const isLogin = false;
-  const token = false;
+  const { isLogin, token } = useCurrentUser();
 
   if (!isLogin && token) {
     return <p>...Loading</p>;
