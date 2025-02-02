@@ -9,7 +9,10 @@ import { setupSwagger } from './utils/setupSwagger';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  app.enableCors();
+  app.enableCors({
+    origin: 'http://localhost:5174',
+    credentials: true,
+  });
   app.useGlobalFilters(new HttpExceptionFilter());
   app.use(cookieParser());
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {

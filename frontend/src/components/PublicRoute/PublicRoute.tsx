@@ -1,16 +1,16 @@
 import { FC } from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import useCurrentUser from "../../hooks/useCurrentUser";
 
 const PublicRoute: FC = () => {
-  const isLogin = true;
-  const token = true;
+  const { isLogin, token } = useCurrentUser();
 
   if (!isLogin && token) {
     return <p>...Loading</p>;
   }
 
   if (isLogin) {
-    return <Navigate to="/" />;
+    return <Navigate to="/shop" />;
   }
 
   return <Outlet />;

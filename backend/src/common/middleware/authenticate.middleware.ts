@@ -8,7 +8,7 @@ import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  constructor(private readonly usersServis: UsersService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
     const authHeader = req.get('Authorization');
@@ -23,7 +23,7 @@ export class AuthMiddleware implements NestMiddleware {
       throw new UnauthorizedException('Authorization header not Bearer type');
     }
 
-    const session = await this.usersServis.getSession({ accessToken });
+    const session = await this.usersService.getSession({ accessToken });
 
     if (!session) {
       throw new UnauthorizedException('Session not found');
@@ -33,7 +33,7 @@ export class AuthMiddleware implements NestMiddleware {
       throw new UnauthorizedException('Access token expired');
     }
 
-    const user = await this.usersServis.getUser({ _id: session.userId });
+    const user = await this.usersService.getUser({ _id: session.userId });
 
     if (!user) {
       throw new UnauthorizedException('User not found');
