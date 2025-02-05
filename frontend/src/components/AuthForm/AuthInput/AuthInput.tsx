@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import { AuthInputProps, Name } from "../../../types";
-import { ButtonEye, IconEye, Input, Label, Message } from "./AuthInput.styled";
+import * as s from "./AuthInput.styled";
 import { FieldErrors } from "react-hook-form";
 
 const AuthInput: FC<AuthInputProps> = ({
@@ -34,8 +34,8 @@ const AuthInput: FC<AuthInputProps> = ({
   };
 
   return (
-    <Label>
-      <Input
+    <s.Label>
+      <s.Input
         $errors={!!errors[name]}
         $isValid={isValid}
         type={getTypeInput(name, passwordVisible)}
@@ -45,26 +45,26 @@ const AuthInput: FC<AuthInputProps> = ({
       />
 
       {(errors[name] || isValid) && (
-        <Message $error={!!errors[name]}>
+        <s.Message $error={!!errors[name]}>
           {errors[name] ? `${errors[name]?.message}` : `Success ${name}`}
-        </Message>
+        </s.Message>
       )}
 
       {(name === "password" || name === "repitPassword") && (
-        <ButtonEye
+        <s.ButtonEye
           type="button"
           onClick={() => setPasswordVisible(!passwordVisible)}
         >
-          <IconEye
+          <s.IconEye
             $errors={!!errors[name]}
             $isValid={isValid}
             iconName={getIconName(errors, isValid, passwordVisible)}
             width={20}
             height={20}
           />
-        </ButtonEye>
+        </s.ButtonEye>
       )}
-    </Label>
+    </s.Label>
   );
 };
 
