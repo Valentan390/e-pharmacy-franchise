@@ -14,4 +14,9 @@
     background: transparent;
 
     justify-content: space-between;
+
+    flex-direction: row;
+    z-index: 2;
+
+    position: relative;
 }

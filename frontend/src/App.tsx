@@ -19,6 +19,7 @@ import NotFound from "./pages/NotFound/NotFound.tsx";
 const App = () => {
   const { isLoading } = useCurrentUser();
   const dispatch = useAppDispatch();
+
   useEffect(() => {
     dispatch(currentThunk());
   }, [dispatch]);

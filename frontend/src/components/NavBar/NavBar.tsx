@@ -1,15 +1,21 @@
 import { FC } from "react";
-import { Nav_div, Nav_nav, Nav_NavLink } from "./NavBar.styled";
+import { Nav_div, Nav_nav, Nav_NavLink, NavSeparator } from "./NavBar.styled";
 import { navItems } from "../../constants";
-import { useMobileMenu } from "../../hooks";
+import { useMediaQueryResponsive, useMobileMenu } from "../../hooks";
 
 const NavBar: FC = () => {
   const { closeMobileMenu } = useMobileMenu();
+  const { isDesktop } = useMediaQueryResponsive();
+
   return (
     <Nav_nav>
-      {navItems.map(({ id, to, text }) => (
+      {navItems.map(({ id, to, text }, index) => (
         <Nav_div key={id}>
-          <Nav_NavLink to={to} onClick={closeMobileMenu}>
+          {index !== navItems.length - 1 && <NavSeparator />}
+          <Nav_NavLink
+            to={to}
+            onClick={isDesktop ? undefined : closeMobileMenu}
+          >
             {text}
           </Nav_NavLink>
         </Nav_div>

@@ -5,7 +5,7 @@ export const Nav_nav = styled.nav`
   width: max-content;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
   justify-content: center;
   align-items: center;
 
@@ -13,10 +13,13 @@ export const Nav_nav = styled.nav`
   }
 
   @media screen and (min-width: 1440px) {
+    flex-direction: row;
+    gap: 2px;
   }
 `;
 
 export const Nav_div = styled.div`
+  position: relative;
   padding: 8px;
 
   border-radius: 60px;
@@ -27,6 +30,30 @@ export const Nav_div = styled.div`
   }
 
   @media screen and (min-width: 1440px) {
+  }
+`;
+
+export const NavSeparator = styled.div`
+  position: absolute;
+  z-index: 2;
+  width: 8px;
+  height: 15px;
+
+  top: 108%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(90deg);
+
+  border-top: 2px solid ${({ theme }) => theme.colors.grayLight};
+  border-bottom: 2px solid ${({ theme }) => theme.colors.grayLight};
+  background: ${({ theme }) => theme.colors.white};
+
+  @media screen and (min-width: 768px) {
+  }
+
+  @media screen and (min-width: 1440px) {
+    top: 50%;
+    left: 103%;
+    transform: translate(-50%, -50%) rotate(0deg);
   }
 `;
 
@@ -55,8 +82,3 @@ export const Nav_NavLink = styled(NavLink)`
   @media screen and (min-width: 1440px) {
   }
 `;
-
-// export const Nav_ = styled.``
-// export const Nav_ = styled.``
-// export const Nav_ = styled.``
-// export const Nav_ = styled.``
