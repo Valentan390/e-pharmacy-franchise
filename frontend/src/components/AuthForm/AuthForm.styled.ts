@@ -53,11 +53,39 @@ export const ButtonAuth = styled(Button)<{ $isSignup: boolean }>`
 `;
 
 export const LinkAuth = styled(Link)`
+  position: relative;
   color: ${({ theme }) => theme.colors.blackTransparent};
   font-feature-settings: "liga" off, "clig" off;
   font-size: 12px;
   font-weight: 400;
   line-height: 1.5;
+
+  &::before {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background-color: ${({ theme }) => theme.colors.black};
+    border-radius: 2px;
+    transition: width 0.3s linear;
+  }
+
+  &:hover,
+  &:focus {
+    color: ${({ theme }) => theme.colors.black};
+    &::before {
+      width: 100%;
+    }
+  }
+
+  //   &:hover,
+  //   &:focus {
+  //     &::before {
+  //       width: 100%;
+  //   }
 
   @media screen and (min-width: 768px) {
   }
