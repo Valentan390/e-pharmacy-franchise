@@ -81,12 +81,6 @@ export const LinkAuth = styled(Link)`
     }
   }
 
-  //   &:hover,
-  //   &:focus {
-  //     &::before {
-  //       width: 100%;
-  //   }
-
   @media screen and (min-width: 768px) {
   }
 
