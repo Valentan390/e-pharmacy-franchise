@@ -16,4 +16,18 @@ export const Logout_button = styled(Button)`
   font-size: 14px;
   font-weight: 400;
   line-height: 1;
+
+  @media screen and (min-width: 1440px) {
+    padding: 15px 32px;
+
+    border: 1px solid ${({ theme }) => theme.colors.greenTransparent50};
+
+    color: ${({ theme }) => theme.colors.green};
+
+    &:hover,
+    &:focus {
+      background: #59b17a;
+      color: ${({ theme }) => theme.colors.white};
+    }
+  }
 `;

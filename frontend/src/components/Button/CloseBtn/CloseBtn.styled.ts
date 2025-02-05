@@ -11,6 +11,11 @@ export const CloseBtn_Button = styled(Button)`
   position: absolute;
   top: 26px;
   right: 20px;
+
+  @media screen and (min-width: 768px) {
+    top: 37px;
+    right: 32px;
+  }
 `;
 
 export const CloseBtn_Icon = styled(Icon)`

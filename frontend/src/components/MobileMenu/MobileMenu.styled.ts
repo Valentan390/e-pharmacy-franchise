@@ -33,4 +33,9 @@ export const MobileMenu_Wrapper = styled.div<{ $isOpen: boolean }>`
     $isOpen ? "translateX(0)" : "translateX(100%)"};
   opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
   transition: transform 0.9s ease-in-out, opacity 0.9s ease-in-out;
+
+  @media screen and (min-width: 768px) {
+    width: 40vw;
+    padding: 30vh 0 64px;
+  }
 `;
