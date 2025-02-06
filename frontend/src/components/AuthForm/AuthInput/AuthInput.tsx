@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
-import { AuthInputProps, Name } from "../../../types";
+import { AuthInputProps } from "../../../types";
 import * as s from "./AuthInput.styled";
-import { FieldErrors } from "react-hook-form";
+import { getIconName, getTypeInput } from "../../../shared/functions";
 
 const AuthInput: FC<AuthInputProps> = ({
   name,
@@ -11,27 +11,6 @@ const AuthInput: FC<AuthInputProps> = ({
   isValid,
 }) => {
   const [passwordVisible, setPasswordVisible] = useState(false);
-
-  const getTypeInput = (name: Name, passwordVisible: boolean) => {
-    if (name === "password" || name === "repitPassword") {
-      return passwordVisible ? "text" : "password";
-    } else {
-      return name === "email" ? "email" : "text";
-    }
-  };
-
-  const getIconName = (
-    errors: FieldErrors,
-    isValid: boolean,
-    passwordVisible: boolean
-  ) => {
-    if (errors[name]) {
-      return "icon-pajamas_error";
-    } else if (isValid) {
-      return "icon-gg_check-o";
-    }
-    return passwordVisible ? "icon-eye" : "icon-eye-off";
-  };
 
   return (
     <s.Label>
@@ -52,6 +31,7 @@ const AuthInput: FC<AuthInputProps> = ({
 
       {(name === "password" || name === "repitPassword") && (
         <s.ButtonEye
+          ariaLabel="icon"
           type="button"
           onClick={() => setPasswordVisible(!passwordVisible)}
         >

@@ -2,7 +2,27 @@ import styled from "styled-components";
 import Button from "../Button/Button/Button";
 import { Link } from "react-router-dom";
 
-export const FormAuth = styled.form`
+export const FormAuth = styled.form<{ $isSignup: boolean }>`
+  width: 100%;
+  display: flex;
+  gap: ${({ $isSignup }) => ($isSignup ? "28px" : "151px")};
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+
+  @media screen and (min-width: 768px) {
+    width: 574px;
+    gap: ${({ $isSignup }) => ($isSignup ? "63px" : "122px")};
+    flex-direction: row;
+    justify-content: start;
+  }
+
+  @media screen and (min-width: 1440px) {
+  }
+`;
+
+export const InputContainer = styled.div`
   width: 100%;
   display: flex;
   gap: 16px;
@@ -12,13 +32,34 @@ export const FormAuth = styled.form`
   flex-wrap: wrap;
 
   @media screen and (min-width: 768px) {
+    width: 574px;
+    gap: 14px;
+    flex-direction: row;
+    justify-content: start;
   }
 
   @media screen and (min-width: 1440px) {
   }
 `;
 
-export const ButtonAuth = styled(Button)<{ $isSignup: boolean }>`
+export const ButtonContainer = styled.div`
+  width: 100%;
+  display: flex;
+  gap: 14px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+
+  @media screen and (min-width: 768px) {
+    width: calc((100% - 14px) / 2);
+  }
+
+  @media screen and (min-width: 1440px) {
+  }
+`;
+
+export const ButtonAuth = styled(Button)`
   width: 100%;
 
   display: flex;
@@ -29,8 +70,6 @@ export const ButtonAuth = styled(Button)<{ $isSignup: boolean }>`
 
   border-radius: 60px;
   background: ${({ theme }) => theme.colors.green};
-  margin-top: ${({ $isSignup }) => ($isSignup ? "12px" : "135px")};
-
   color: ${({ theme }) => theme.colors.white};
   font-size: 14px;
   font-weight: 500;

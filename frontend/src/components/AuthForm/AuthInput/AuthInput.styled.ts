@@ -1,29 +1,19 @@
-import styled, { DefaultTheme } from "styled-components";
+import styled from "styled-components";
 import Button from "../../Button/Button/Button";
 import Icon from "../../Icon/Icon";
+import { getColor } from "../../../shared/functions";
 
 export const Label = styled.label`
   width: 100%;
   position: relative;
 
   @media screen and (min-width: 768px) {
+    width: calc((100% - 14px) / 2);
   }
 
   @media screen and (min-width: 1440px) {
   }
 `;
-
-export const getColor = (
-  theme: DefaultTheme,
-  $errors: boolean,
-  $isValid: boolean
-) => {
-  if ($errors) {
-    return theme.colors.red;
-  } else {
-    return $isValid ? theme.colors.green : theme.colors.blackTransparent10;
-  }
-};
 
 export const Input = styled.input<{ $errors: boolean; $isValid: boolean }>`
   width: 100%;
@@ -74,6 +64,11 @@ export const Input = styled.input<{ $errors: boolean; $isValid: boolean }>`
     background: ${({ theme }) => theme.colors.white} !important;
     -webkit-text-fill-color: ${({ theme }) => theme.colors.black} !important;
     transition: background-color 5000s ease-in-out 0s;
+  }
+
+  &::-ms-reveal,
+  &::-ms-clear {
+    display: none;
   }
 
   @media screen and (min-width: 768px) {

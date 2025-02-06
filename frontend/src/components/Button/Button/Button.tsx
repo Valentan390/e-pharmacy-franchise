@@ -6,6 +6,7 @@ interface IButtonProps {
   children: ReactNode;
   className?: string;
   disabled?: boolean;
+  ariaLabel?: string;
 }
 
 const Button: FC<IButtonProps> = ({
@@ -14,9 +15,11 @@ const Button: FC<IButtonProps> = ({
   className,
   children,
   disabled,
+  ariaLabel,
 }) => {
   return (
     <button
+      aria-label={ariaLabel}
       disabled={disabled}
       onClick={onClick}
       type={type}

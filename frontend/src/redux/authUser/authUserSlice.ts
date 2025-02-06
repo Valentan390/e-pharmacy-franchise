@@ -11,7 +11,7 @@ import {
   signinThunk,
   signupThunk,
 } from "./authUserOperations";
-import { handlerPending, handlerRejected } from "../../shared/functions/redux";
+import { handlerPending, handlerRejected } from "../../shared/functions";
 
 const initialState: AuthUserState = {
   user: null,
