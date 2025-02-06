@@ -37,7 +37,7 @@ const AuthForm: FC = () => {
       } else {
         const signinData = dataAuth as SigninRequestBody;
         await dispatch(signinThunk(signinData)).unwrap();
-        navigate("/shop");
+        navigate("/shop/create-shop");
       }
     } catch (error) {
       if (error instanceof Error) {
