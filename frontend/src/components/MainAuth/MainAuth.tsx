@@ -1,17 +1,14 @@
-import { FC, ReactNode } from "react";
-import { Container, Main, Section } from "./MainAuth.styled";
-
-export interface MainAuthProps {
-  children: ReactNode;
-}
+import { FC } from "react";
+import * as s from "./MainAuth.styled";
+import { MainAuthProps } from "../../types";
 
 const MainAuth: FC<MainAuthProps> = ({ children }) => {
   return (
-    <Main>
-      <Section>
-        <Container className="container">{children}</Container>
-      </Section>
-    </Main>
+    <s.Main>
+      <s.Section>
+        <s.Container className="container">{children}</s.Container>
+      </s.Section>
+    </s.Main>
   );
 };
 

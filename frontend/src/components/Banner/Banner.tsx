@@ -1,15 +1,15 @@
 import { FC } from "react";
-import { Banner_Container, Banner_h2, Banner_Tablet } from "./Banner.styled";
+import * as s from "./Banner.styled";
 
 const Banner: FC = () => {
   return (
-    <Banner_Container>
-      <Banner_Tablet />
-      <Banner_h2>
+    <s.Banner_Container>
+      <s.Banner_Tablet />
+      <s.Banner_h2>
         Your medication, delivered Say goodbye to all{" "}
         <span>your healthcare</span> worries with us
-      </Banner_h2>
-    </Banner_Container>
+      </s.Banner_h2>
+    </s.Banner_Container>
   );
 };
 

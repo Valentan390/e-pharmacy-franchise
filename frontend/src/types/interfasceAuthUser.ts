@@ -101,3 +101,5 @@ export interface SigninFormData {
   password: string;
   repitPassword: string;
 }
+
+export type FormData = SignupFormData | SigninFormData;
