@@ -1,5 +1,5 @@
 import { FieldErrors } from "react-hook-form";
-import { FormData, Name } from "../../types";
+import { Name } from "../../types";
 
 export const getTypeInput = (name: Name, passwordVisible: boolean) => {
   if (name === "password" || name === "repitPassword") {
@@ -10,11 +10,12 @@ export const getTypeInput = (name: Name, passwordVisible: boolean) => {
 };
 
 export const getIconName = (
-  errors: FieldErrors<FormData>,
+  name: Name,
+  errors: FieldErrors,
   isValid: boolean,
   passwordVisible: boolean
 ) => {
-  if (errors.password || errors.repitPassword) {
+  if (errors[name]) {
     return "icon-pajamas_error";
   } else if (isValid) {
     return "icon-gg_check-o";
