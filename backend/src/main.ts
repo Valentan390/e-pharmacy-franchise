@@ -10,7 +10,7 @@ import { setupSwagger } from './utils/setupSwagger';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors({
-    origin: 'http://localhost:5174',
+    origin: 'http://localhost:5173',
     credentials: true,
   });
   app.useGlobalFilters(new HttpExceptionFilter());

@@ -25,6 +25,7 @@ const AuthForm: FC = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isValid },
   } = useForm<FormData>({ resolver: yupResolver(schema), mode: "onChange" });
 
@@ -33,10 +34,12 @@ const AuthForm: FC = () => {
       if (isSignup) {
         const signupData = dataAuth as SignupRequestBody;
         await dispatch(signupThunk(signupData)).unwrap();
+        reset();
         navigate("/login");
       } else {
         const signinData = dataAuth as SigninRequestBody;
         await dispatch(signinThunk(signinData)).unwrap();
+        reset();
         navigate("/shop/create-shop");
       }
     } catch (error) {

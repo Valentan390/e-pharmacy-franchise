@@ -15,6 +15,7 @@ import {
 } from "../../types";
 import axios from "axios";
 import { RootState } from "../store";
+import { toast } from "react-toastify";
 
 export const signupThunk = createAsyncThunk<
   AuthSignupResponse,
@@ -23,10 +24,45 @@ export const signupThunk = createAsyncThunk<
 >("auth/signup", async (body, { rejectWithValue }) => {
   try {
     const data = await signupRequest(body);
+    toast.success(
+      "Go to the email address you provided during registration to confirm your registration."
+    );
     return data;
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response?.data?.message) {
-      return rejectWithValue(error.response.data.message);
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        const status = error.response.status;
+        let message = "An error occurred";
+        switch (status) {
+          case 400:
+            message = "Bad request (invalid request body).";
+            break;
+          case 404:
+            message = "Service not found.";
+            break;
+          case 409:
+            message = "Such email already exists.";
+            break;
+          case 500:
+            message = "Server error.";
+            break;
+          default:
+            message = "An unknown error occurred.";
+        }
+        toast.error(message);
+        return rejectWithValue(message);
+      } else if (error.request) {
+        const message = "No response from the server. Please try again later.";
+        toast.error(message);
+        return rejectWithValue(message);
+      } else {
+        const message = `Request error: ${error.message}`;
+        toast.error(message);
+        return rejectWithValue(message);
+      }
+    } else if (error instanceof Error) {
+      toast.error(`${error.message}`);
+      return rejectWithValue(error.message);
     }
     return rejectWithValue("An unknown error occurred");
   }
@@ -39,10 +75,43 @@ export const signinThunk = createAsyncThunk<
 >("auth/signin", async (body, { rejectWithValue }) => {
   try {
     const data = await signinRequest(body);
+    toast.success("You have successfully logged in.");
     return data;
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response?.data?.message) {
-      return rejectWithValue(error.response.data.message);
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        const status = error.response.status;
+        let message = "An error occurred";
+        switch (status) {
+          case 400:
+            message = "Bad request (invalid request body).";
+            break;
+          case 401:
+            message = "Email or password invalid";
+            break;
+          case 404:
+            message = "Service not found";
+            break;
+          case 500:
+            message = "Server error.";
+            break;
+          default:
+            message = "An unknown error occurred.";
+        }
+        toast.error(message);
+        return rejectWithValue(message);
+      } else if (error.request) {
+        const message = "No response from the server. Please try again later.";
+        toast.error(message);
+        return rejectWithValue(message);
+      } else {
+        const message = `Request error: ${error.message}`;
+        toast.error(message);
+        return rejectWithValue(message);
+      }
+    } else if (error instanceof Error) {
+      toast.error(`${error.message}`);
+      return rejectWithValue(error.message);
     }
     return rejectWithValue("An unknown error occurred");
   }
@@ -55,10 +124,40 @@ export const logoutThunk = createAsyncThunk<
 >("auth/logout", async (_, { rejectWithValue }) => {
   try {
     const data = await logoutRequest();
+    toast.success("You have been logged out.");
     return data;
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response?.data?.message) {
-      return rejectWithValue(error.response.data.message);
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        const status = error.response.status;
+        let message = "An error occurred";
+        switch (status) {
+          case 401:
+            message = "Unauthorized";
+            break;
+          case 404:
+            message = "Service not found";
+            break;
+          case 500:
+            message = "Server error.";
+            break;
+          default:
+            message = "An unknown error occurred.";
+        }
+        toast.error(message);
+        return rejectWithValue(message);
+      } else if (error.request) {
+        const message = "No response from the server. Please try again later.";
+        toast.error(message);
+        return rejectWithValue(message);
+      } else {
+        const message = `Request error: ${error.message}`;
+        toast.error(message);
+        return rejectWithValue(message);
+      }
+    } else if (error instanceof Error) {
+      toast.error(`${error.message}`);
+      return rejectWithValue(error.message);
     }
     return rejectWithValue("An unknown error occurred");
   }
@@ -82,8 +181,38 @@ export const currentThunk = createAsyncThunk<
 
       return data;
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.data?.message) {
-        return rejectWithValue(error.response.data.message);
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          const status = error.response.status;
+          let message = "An error occurred";
+          switch (status) {
+            case 401:
+              message = "Unauthorized";
+              break;
+            case 404:
+              message = "User not found.";
+              break;
+            case 500:
+              message = "Server error.";
+              break;
+            default:
+              message = "An unknown error occurred.";
+          }
+          toast.error(message);
+          return rejectWithValue(message);
+        } else if (error.request) {
+          const message =
+            "No response from the server. Please try again later.";
+          toast.error(message);
+          return rejectWithValue(message);
+        } else {
+          const message = `Request error: ${error.message}`;
+          toast.error(message);
+          return rejectWithValue(message);
+        }
+      } else if (error instanceof Error) {
+        toast.error(`${error.message}`);
+        return rejectWithValue(error.message);
       }
       return rejectWithValue("An unknown error occurred");
     }

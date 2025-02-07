@@ -38,7 +38,7 @@ const AuthInput: FC<AuthInputProps> = ({
           <s.IconEye
             $errors={!!errors[name]}
             $isValid={isValid}
-            iconName={getIconName(errors, isValid, passwordVisible)}
+            iconName={getIconName(name, errors, isValid, passwordVisible)}
             width={20}
             height={20}
           />
