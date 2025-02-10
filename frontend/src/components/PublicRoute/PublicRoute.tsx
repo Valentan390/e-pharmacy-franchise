@@ -10,7 +10,7 @@ const PublicRoute: FC = () => {
   }
 
   if (isLogin) {
-    return <Navigate to="/shop" />;
+    return <Navigate to="shop/create-shop" />;
   }
 
   return <Outlet />;
