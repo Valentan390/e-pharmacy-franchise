@@ -1,12 +1,13 @@
 import { FC } from "react";
-import { Logo_div, Logo_Link } from "./Logo.styled";
+import * as s from "./Logo.styled";
+import { LogoProps } from "../../types";
 
-const Logo: FC = () => {
+const Logo: FC<LogoProps> = ({ footer }) => {
   return (
-    <Logo_Link to={"/"}>
-      <Logo_div />
+    <s.Logo_Link to={"/"} $isFooter={footer}>
+      <s.Logo_div $isFooter={footer} />
       E-Pharmacy
-    </Logo_Link>
+    </s.Logo_Link>
   );
 };
 
