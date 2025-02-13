@@ -13,6 +13,7 @@ export const theme = {
     blackTransparent10: "rgba(29, 30, 33, 0.1)",
     gray: "#93939A",
     grayLight: "#D9D9D9",
+    grayDark: "#6A6A6F",
     grayTransparent: "rgba(241, 241, 241, 0.50)",
     lightGrayTransparent: "rgba(247, 248, 250, 0.1)",
   },

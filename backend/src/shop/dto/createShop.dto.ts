@@ -48,6 +48,7 @@ export class CreateShopDto {
   @ApiProperty({
     description: 'The phone number of the shop.',
     example: '097-333-88-87',
+    pattern: phoneRegexp.source,
   })
   @IsNotEmpty({ message: 'Phone is required.' })
   @Matches(phoneRegexp, {
