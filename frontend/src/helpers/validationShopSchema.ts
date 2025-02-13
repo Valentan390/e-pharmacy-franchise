@@ -41,6 +41,10 @@ export const createShopSchema = yup.object({
 
   ownDeliverySystem: yup
     .string()
+    .transform((value) =>
+      value === "true" ? true : value === "false" ? false : value
+    )
+    .oneOf(["true", "false"], "Invalid value for ownDeliverySystem")
     .required("Please specify if you have your own delivery system"),
 
   logo: yup
