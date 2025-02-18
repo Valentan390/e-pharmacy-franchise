@@ -1,32 +1,37 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import * as s from "./DeliverySystem.styled";
 
-const DeliverySystem: FC = () => {
-  const [value, setValue] = useState("true");
+export interface DeliverySystemProps {
+  onChange: (value: boolean) => void;
+  value: boolean | undefined;
+}
+
+const DeliverySystem: FC<DeliverySystemProps> = ({ onChange, value }) => {
+  const booleanValue = value ?? true;
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue((event.target as HTMLInputElement).value);
+    onChange(event.target.value === "true");
   };
 
   return (
     <s.StyledFormControl>
-      <s.StyledFormLabel id="radio-buttons-group">
+      <s.StyledFormLabel htmlFor="delivery-system-yes">
         Has own Delivery System?
       </s.StyledFormLabel>
+
       <s.StyledRadioGroup
-        aria-labelledby="radio-buttons-group"
-        name="controlled-radio-buttons-group"
-        value={value}
+        name="delivery-system"
+        value={booleanValue.toString()}
         onChange={handleChange}
       >
         <s.StyledFormControlLabel
-          value={"true"}
-          control={<s.StyledRadio />}
+          value="true"
+          control={<s.StyledRadio id="delivery-system-yes" />}
           label="Yes"
         />
         <s.StyledFormControlLabel
-          value={"false"}
-          control={<s.StyledRadio />}
+          value="false"
+          control={<s.StyledRadio id="delivery-system-no" />}
           label="No"
         />
       </s.StyledRadioGroup>
