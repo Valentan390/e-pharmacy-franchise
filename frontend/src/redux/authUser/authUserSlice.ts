@@ -28,6 +28,13 @@ export const authUserSlice = createSlice({
     updateToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
     },
+    logoutUser: (state) => {
+      state.error = initialState.error;
+      state.isLoading = initialState.isLoading;
+      state.isLogin = initialState.isLogin;
+      state.token = initialState.token;
+      state.user = initialState.user;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -74,5 +81,5 @@ export const authUserSlice = createSlice({
   },
 });
 
-export const { updateToken } = authUserSlice.actions;
+export const { updateToken, logoutUser } = authUserSlice.actions;
 export const authUserReducer = authUserSlice.reducer;

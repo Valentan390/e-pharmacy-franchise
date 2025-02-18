@@ -1,6 +1,4 @@
 import styled from "styled-components";
-import { getColor } from "../../shared/functions";
-import Icon from "../Icon/Icon";
 import Button from "../Button/Button/Button";
 
 export const Container = styled.div`
@@ -76,7 +74,7 @@ export const Wrapper = styled.div`
   width: 100%;
 
   display: flex;
-  gap: 12px;
+  gap: 18px;
   justify-content: center;
   align-items: start;
 
@@ -93,144 +91,6 @@ export const Wrapper = styled.div`
 
   @media screen and (min-width: 1440px) {
   }
-`;
-
-export const Label = styled.label`
-  width: 100%;
-
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  align-items: start;
-  flex-wrap: wrap;
-  flex-direction: column;
-
-  color: ${({ theme }) => theme.colors.black};
-  font-feature-settings: "liga" off, "clig" off;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.28;
-
-  @media screen and (min-width: 768px) {
-    width: calc((100% - 28px) / 3);
-  }
-
-  @media screen and (min-width: 1440px) {
-  }
-`;
-
-export const LabelText = styled.span`
-  margin-left: 18px;
-`;
-
-export const Input = styled.input`
-  width: 100%;
-  padding: 13px 18px;
-
-  color: ${({ theme }) => theme.colors.black};
-  font-feature-settings: "liga" off, "clig" off;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1.5;
-
-  border-radius: 27px;
-  border: 1px solid
-    ${({ theme, $errors, $isValid }) => getColor(theme, $errors, $isValid)};
-  background: #fff;
-
-  transition: border-color ${({ theme }) => theme.transition},
-    box-shadow ${({ theme }) => theme.transition};
-
-  &::placeholder {
-    color: ${({ theme }) => theme.colors.blackTransparent};
-    font-feature-settings: "liga" off, "clig" off;
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 1.5;
-  }
-
-  @media screen and (min-width: 768px) {
-  }
-
-  @media screen and (min-width: 1440px) {
-  }
-`;
-
-// *********  LOGO  ************* //
-
-export const LogoContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  justify-content: start;
-  align-items: start;
-  flex-wrap: wrap;
-
-  @media screen and (min-width: 768px) {
-    width: calc((100% - 28px) / 3);
-  }
-
-  @media screen and (min-width: 1440px) {
-  }
-`;
-
-export const LogoText = styled.p`
-  color: ${({ theme }) => theme.colors.black};
-  font-feature-settings: "liga" off, "clig" off;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.28;
-
-  margin-left: 18px;
-
-  @media screen and (min-width: 768px) {
-  }
-
-  @media screen and (min-width: 1440px) {
-  }
-`;
-
-export const LabelLogo = styled.label`
-  width: 100%;
-  padding: 13px 18px;
-
-  display: flex;
-  gap: 8px;
-  justify-content: start;
-  align-items: center;
-  flex-wrap: wrap;
-
-  color: ${({ theme }) => theme.colors.blackTransparent};
-  font-feature-settings: "liga" off, "clig" off;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1.5;
-
-  border-radius: 27px;
-  border: 1px solid
-    ${({ theme, $errors, $isValid }) => getColor(theme, $errors, $isValid)};
-  background: #fff;
-
-  @media screen and (min-width: 768px) {
-  }
-
-  @media screen and (min-width: 1440px) {
-  }
-`;
-
-export const LogoIcon = styled(Icon)`
-  stroke: ${({ theme }) => theme.colors.green};
-`;
-
-export const InputFileHidden = styled.input`
-  opacity: 0;
-  width: 0;
-  height: 0;
-  line-height: 0;
-  overflow: hidden;
-  padding: 0;
-  margin: 0;
 `;
 
 // *********** BUTTON *********** //

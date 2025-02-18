@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import {
   AuthCurrentResponse,
   AuthLogoutResponse,
@@ -8,7 +8,7 @@ import {
   SigninRequestBody,
   SignupRequestBody,
 } from "../types";
-import { updateToken } from "../redux/authUser/authUserSlice";
+import { logoutUser, updateToken } from "../redux/authUser/authUserSlice";
 
 const baseURLApi = import.meta.env.VITE_BASE_URL_API;
 
@@ -32,9 +32,17 @@ const setToken = (token: string | null) => {
 
 instance.interceptors.response.use(
   (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+  async (error: AxiosError) => {
+    const originalRequest = error.config as InternalAxiosRequestConfig;
     const { store } = await import("../redux/store");
+
+    if (
+      error.response?.status === 401 &&
+      originalRequest.url === "user/refresh"
+    ) {
+      store.dispatch(logoutUser());
+      return Promise.reject(error);
+    }
 
     if (
       error.response?.status === 401 &&
@@ -52,8 +60,9 @@ instance.interceptors.response.use(
         originalRequest.headers["Authorization"] = `Bearer ${token}`;
 
         return instance(originalRequest);
-      } catch (error) {
-        return Promise.reject(error);
+      } catch (refreshError) {
+        store.dispatch(logoutUser());
+        return Promise.reject(refreshError);
       }
     }
     return Promise.reject(error);

@@ -3,10 +3,32 @@ import { useLocation } from "react-router-dom";
 import { shopItems } from "../../constants/shopItems";
 import * as s from "./ShopForm.styled";
 import DeliverySystem from "./DeliverySystem/DeliverySystem";
+import { createShopSchema, editShopSchema } from "../../helpers";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { CreateShop, EditShop } from "../../types";
+import ShopInput from "./ShopInput/ShopInput";
+import ShopLogo from "./ShopLogo/ShopLogo";
 
 const ShopForm: FC = () => {
   const { pathname } = useLocation();
   const isCreatePage = pathname === "/shop/create-shop";
+  const validationSchema = isCreatePage ? createShopSchema : editShopSchema;
+  type FormType = typeof isCreatePage extends true ? CreateShop : EditShop;
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors, isValid },
+  } = useForm<FormType>({
+    resolver: yupResolver(validationSchema),
+    defaultValues: {
+      ownDeliverySystem: false,
+    },
+  });
+
+  const onSubmit = handleSubmit((data) => console.log(data));
 
   return (
     <s.Container>
@@ -15,29 +37,36 @@ const ShopForm: FC = () => {
         This information will be displayed publicly so be careful what you
         share.
       </s.Subtitle>
-      <s.Form>
+      <s.Form onSubmit={onSubmit}>
         <s.Wrapper>
-          {shopItems.map(({ id, label, placeholder }) => (
-            <s.Label key={id}>
-              <s.LabelText>{label}</s.LabelText>
-              <s.Input type="text" placeholder={placeholder} />
-            </s.Label>
+          {shopItems.map(({ id, label, placeholder, name }) => (
+            <ShopInput
+              key={id}
+              label={label}
+              placeholder={placeholder}
+              name={name}
+              register={register}
+              error={errors}
+              isValid={isValid}
+            />
           ))}
 
-          <s.LogoContainer>
-            <s.LogoText>Upload Logo</s.LogoText>
-            <s.LabelLogo>
-              <s.LogoIcon iconName="icon-attachment-3" width={18} height={18} />
-              Change image
-              <s.InputFileHidden
-                type="file"
-                accept="image/*, .png, .jpg, .gif, .webp"
-              />
-            </s.LabelLogo>
-          </s.LogoContainer>
+          <ShopLogo
+            register={register}
+            error={errors}
+            isValid={isValid}
+            name="logo"
+          />
         </s.Wrapper>
 
-        <DeliverySystem />
+        <Controller
+          name="ownDeliverySystem"
+          control={control}
+          rules={{ required: true }}
+          render={({ field: { onChange, value } }) => (
+            <DeliverySystem onChange={onChange} value={value} />
+          )}
+        />
 
         <s.ButtonShop>{isCreatePage ? "Create account" : "Save"}</s.ButtonShop>
       </s.Form>
